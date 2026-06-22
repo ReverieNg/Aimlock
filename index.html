@@ -605,10 +605,10 @@ input,select,textarea{font-size:16px}
 <!-- KHU VỰC 2 NÚT MỞ GAME FREE FIRE -->
 <div style="display: flex; flex-direction: row; gap: 10px; justify-content: center; margin-top: 20px; width: 100%; padding: 0 15px; box-sizing: border-box;">
   <button class="pro-btn-main" onclick="showToast('🚀 Áp dụng cấu hình thành công!')" style="flex: 1; min-width: 0; padding: 12px 5px; font-size: 13px;">
-    🎯 CẤU HÌNH THƯỜNG
+    🎯 CẤU HÌNH FF THƯỜNG
   </button>
   <button class="pro-btn-main" onclick="showToast('⚡ Áp dụng cấu hình MAX thành công!')" style="flex: 1; min-width: 0; padding: 12px 5px; font-size: 13px;">
-    🔥 CẤU HÌNH MAX
+    🔥 CẤU HÌNH FF MAX
   </button>
 </div>
       
@@ -970,11 +970,18 @@ input,select,textarea{font-size:16px}
     function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
 
     function showToast(msg) {
-      const toast = document.getElementById('toast');
-      toast.innerText = msg;
-      toast.classList.add('show');
-      setTimeout(() => { toast.classList.remove('show'); }, 2500);
+  const toast = document.getElementById('toast');
+  toast.innerText = msg;
+  
+  // Ép chữ luôn thẳng băng, hộp tự co giãn theo chữ
+  toast.style.whiteSpace = 'nowrap';
+  toast.style.width = 'max-content';
+  toast.style.maxWidth = '90%';
+  
+  toast.classList.add('show');
+  setTimeout(() => { toast.classList.remove('show'); }, 2500);
     }
+    
 
     function detectDevice() {
       const ua = navigator.userAgent;
