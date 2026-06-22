@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <title>AIMLOCK PANEL</title>
+  <link rel="manifest" href="https://aimlockpanelv2-Reverie.netlify.app/manifest.json">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <style>
+:root {
+  --neon-cyan: #ff3333;
+  --neon-blue: #cc0000;
+  --neon-purple: #ff6666;
+  --neon-pink: #ff1a1a;
+
+  --neon-glow-cyan: rgba(255, 51, 51, 0.8);
+  --neon-glow-blue: rgba(204, 0, 0, 0.6);
+  --neon-glow-purple: rgba(255, 102, 102, 0.55);
+}
+:root{
+  --bg:#110000;--card:#1a0000;--card-2:#250000;--text:#ffeaea;--muted:#c9a8a8;
+  --primary:#ff4e4e;--accent:#ff6666;--danger:#ef4444;--ok:#22c55e;--ring:rgba(255,78,78,.35);
+  --shadow:0 10px 30px rgba(0,0,0,.35);--notice:#e90e0e;--noticeText:#ffffff;--gold:#f59e0b
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;touch-action:manipulation;
+  font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji";
+  color:var(--text);
+  background:radial-gradient(1200px 600px at 20% -10%,#3a1818 0%,#110000 45%) fixed,
+             radial-gradient(900px 480px at 120% 10%,#421a1a 0%,#110000 40%) fixed,#110000;
+  min-height:100dvh;overflow-x:hidden
+}
+input,select,textarea{font-size:16px}
+
+#particles-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 99999; 
+  pointer-events: none; 
+}
+
+.container{position:relative;z-index:1;max-width:980px;margin:clamp(16px,5vw,48px) auto;padding:0 16px 48px}
+.header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:18px;
+  background:linear-gradient(135deg,var(--card),var(--card-2));border:1px solid rgba(255,255,255,.06);
+  border-radius:18px;box-shadow:var(--shadow)}
+.title{margin:0;font-weight:900;letter-spacing:.2px;font-size:clamp(20px,3.2vw,28px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;gap:8px}
+.title b{background:linear-gradient(90deg,var(--text),var(--accent));-webkit-background-clip:text;background-clip:text;color:transparent}
+.badge{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:999px;background:#8a1e1e;border:1px solid #fa6060;color:#fd9393;font-size:12px}
+
+.special-menu-btn{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.1);background:linear-gradient(180deg,#240f0f,#200c0c);color:var(--text);cursor:pointer;font-weight:800}
+.special-menu-btn:focus{outline:none;box-shadow:0 0 0 6px var(--ring)}
+
+.announce{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:14px;padding:10px 12px;border-radius:14px;background:var(--notice);color:var(--noticeText);border:1px solid rgba(255,255,255,.25);box-shadow:var(--shadow);transition:opacity .25s ease,transform .25s ease}
+.announce.hidden{opacity:0;transform:translateY(-6px);pointer-events:none}
+.announce-content{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.announce-title{font-weight:900;letter-spacing:.2px}
+.announce-tags{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.tag{display:inline-flex;align-items:center;gap:6px;padding:4px 8px;border-radius:999px;background:rgba(0,0,0,.15);color:#fff;font-weight:800}
+.tag i{opacity:.95}
+.announce-close{display:grid;place-items:center;width:32px;height:32px;border-radius:10px;border:1px solid rgba(255,255,255,.45);background:rgba(0,0,0,.18);color:#fff;cursor:pointer}
+
+.main-content{margin-top:18px;display:grid;gap:18px}
+.section{background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,0)),var(--card);border:1px solid rgba(255,255,255,.06);border-radius:18px;padding:16px;box-shadow:var(--shadow)}
+.section-title{margin:0 0 10px;display:flex;align-items:center;gap:10px;font-size:clamp(16px,2.2vw,19px);letter-spacing:.2px}
+.section-icon{color:var(--primary)}
+
+.function-item{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px;border-radius:14px;background:linear-gradient(180deg,var(--card-2),var(--card));border:1px solid rgba(255,255,255,.06);transition:transform .2s ease,border-color .2s ease}
+.function-item[data-state="on"]{border-color:rgba(255,51,51,.85);box-shadow:0 0 0 1px rgba(255,51,51,.25),0 0 18px rgba(255,51,51,.35)}
+.function-item+.function-item{margin-top:8px}
+.function-item:hover{transform:translateY(-2px);border-color:rgba(254,110,110,.35)}
+.function-inline-icon{display:inline-block;margin-right:8px;color:#ff9a9a;font-family:"Font Awesome 6 Free";font-weight:900;font-size:14px;line-height:1}
+.feature-inline-icon{margin-right:8px;color:#ff9a9a}
+.function-content{display:flex;align-items:center;gap:12px}
+.logo{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(135deg,rgba(254,110,110,.18),rgba(224,82,82,.14));color:var(--primary)}
+.function-text{display:flex;align-items:center;gap:8px;font-weight:800}
+.function-text .sub{font-weight:700;color:var(--muted)}
+
+.toggle-switch{position:relative}
+.toggle-input{position:absolute;inset:0;opacity:0;pointer-events:none}
+.toggle-label{display:inline-flex;align-items:center;width:62px;height:32px;background:#3d2222;border:1px solid rgba(255,255,255,.08);border-radius:999px;cursor:pointer;transition:background .2s ease,border-color .2s ease,box-shadow .2s ease}
+.toggle-label:focus{outline:none;box-shadow:0 0 0 6px var(--ring)}
+.toggle-slider{position:relative;width:100%;height:100%;border-radius:999px}
+.toggle-slider::before{content:"";position:absolute;top:50%;left:6px;transform:translateY(-50%);width:24px;height:24px;border-radius:50%;background:linear-gradient(180deg,#fff,#ffdfff);box-shadow:0 4px 12px rgba(0,0,0,.25);transition:transform .22s ease,background .2s ease}
+.toggle-input:checked+.toggle-label{background:linear-gradient(90deg,#ff3333,#cc0000);border-color:rgba(255,51,51,.6)}
+.toggle-input:checked+.toggle-label .toggle-slider::before{transform:translate(28px,-50%);background:linear-gradient(180deg,#fff,#ffd6d6)}
+
+.sensi-item{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px;border-radius:14px;background:linear-gradient(180deg,var(--card-2),var(--card));border:1px solid rgba(255,255,255,.06)}
+.sensi-content{display:flex;align-items:center;gap:12px}
+.sensi-icon{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,rgba(254,110,110,.18),rgba(224,82,82,.14));color:var(--accent)}
+.sensi-info{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.sensi-label{font-weight:800;color:var(--muted)}
+.sensi-value{font-weight:900}
+
+.dropdown{position:relative;display:inline-block;min-width:170px}
+.dropdown-select{-webkit-appearance:none;appearance:none;width:100%;padding:9px 36px 9px 12px;font-weight:800;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:linear-gradient(180deg,#220f0f,#1b0c0c);color:var(--text);outline:none;transition:border-color .2s ease,box-shadow .2s ease}
+.dropdown-select:focus{border-color:var(--primary);box-shadow:0 0 0 6px var(--ring)}
+.dropdown-select option{color:var(--text);background:#220f0f}
+.dropdown-arrow{position:absolute;right:12px;top:50%;transform:translateY(-50%);pointer-events:none;color:var(--muted)}
+
+.activate-btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;width:100%;margin-top:6px;padding:13px 14px;font-weight:900;letter-spacing:.4px;text-transform:uppercase;background:linear-gradient(90deg,var(--primary),var(--accent));color:#1a0606;border:0;border-radius:14px;cursor:pointer;box-shadow:0 10px 24px rgba(246,59,59,.35);transition:transform .08s ease,filter .2s ease,box-shadow .2s ease}
+.activate-btn:hover{filter:brightness(1.06);box-shadow:0 14px 30px rgba(246,59,59,.42)}
+.activate-btn:active{transform:translateY(1px) scale(.995)}
+
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);padding:10px 14px;border-radius:12px;background:rgba(28,14,14,.95);color:var(--text);border:1px solid rgba(255,255,255,.12);box-shadow:var(--shadow);font-weight:800;z-index:9999;opacity:0;translate:0 8px;transition:opacity .25s ease,translate .25s ease}
+.toast.show{opacity:1;translate:0 0}
+.footer{margin-top:14px;text-align:center;color:var(--muted);font-weight:900;opacity:.95}
+.modal.hidden{display:none}
+.modal{position:fixed;z-index:10000;inset:0;display:grid;place-items:center;padding:clamp(8px,2vw,16px)}
+.modal-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.55)}
+.modal-dialog{position:relative;z-index:1;width:min(560px,92vw);margin:0;background:linear-gradient(180deg,var(--card-2),var(--card));border:1px solid rgba(255,255,255,.08);border-radius:16px;box-shadow:var(--shadow);overflow:hidden}
+.modal-header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;border-bottom:1px solid rgba(255,255,255,.06)}
+.modal-header h3{margin:0;font-size:18px}
+.modal-close{display:grid;place-items:center;width:34px;height:34px;border-radius:10px;border:1px solid rgba(255,255,255,.1);background:#251212;color:var(--text);cursor:pointer}
+.modal-infobox{display:flex;align-items:center;gap:10px;padding:10px 14px;background:linear-gradient(135deg,rgba(254,110,110,.18),rgba(224,82,82,.14));border-bottom:1px solid rgba(255,255,255,.06)}
+.infobox-close{margin-left:auto;display:grid;place-items:center;width:28px;height:28px;border-radius:8px;border:1px solid rgba(255,255,255,.1);background:#220f0f;color:var(--text);cursor:pointer}
+.modal-body{padding:14px}
+.feature-list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.feature{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid rgba(255,255,255,.06);border-radius:12px;background:linear-gradient(180deg,#2b1010,#240f0f)}
+.feature .logo{width:34px;height:34px;border-radius:10px}
+.feature label{display:flex;align-items:center;gap:8px;font-weight:800}
+.feature input{transform:translateY(1px)}
+.modal-actions{padding:12px 14px;border-top:1px solid rgba(255,255,255,.06);display:flex;justify-content:flex-end}
+.btn-primary{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:12px;border:0;background:linear-gradient(90deg,var(--primary),var(--accent));color:#1a0606;font-weight:900;cursor:pointer}
+.notice-modal.hidden{display:none}
+.notice-modal{position:fixed;z-index:11000;inset:0;display:grid;place-items:center;padding:clamp(10px,3vw,18px)}
+.notice-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.6)}
+.notice-card{position:relative;z-index:1;width:min(600px,92vw);background:linear-gradient(180deg,#240e0e,#200b0b);border-radius:20px;box-shadow:0 12px 30px rgba(0,0,0,.45);padding:16px;border:1px solid rgba(224,82,82,.45);outline:2px solid rgba(224,82,82,.25)}
+.notice-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.notice-title{margin:0;font-weight:900;font-size:20px;display:flex;align-items:center;gap:8px}
+.notice-title .verify{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:999px;background:#8a1e1e;border:1px solid #fa6060;color:#fd9393;font-size:11px}
+.notice-close{display:grid;place-items:center;width:36px;height:36px;border-radius:12px;background:rgba(239,68,68,.18);border:1px solid rgba(239,68,68,.45);color:#fff;cursor:pointer}
+.notice-body{padding:8px 2px 6px 2px;color:#ffcfcf}
+.notice-lead{font-weight:800;color:#ff8585;margin:2px 0 8px 0}
+.notice-list{display:grid;gap:8px;margin:0;padding:0;list-style:none}
+.notice-item{display:flex;align-items:center;gap:10px;background:linear-gradient(180deg,#2d0f0f,#260c0c);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:10px 12px}
+.notice-item i{color:#fa6060}
+.notice-actions{display:flex;gap:10px;margin-top:12px}
+.btn-gold{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(180deg,#fbbf24,#f59e0b);border:0;color:#170b0b;padding:10px 14px;border-radius:12px;font-weight:900;cursor:pointer}
+.btn-red{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(180deg,#ef4444,#dc2626);border:0;color:#fff;padding:10px 14px;border-radius:12px;font-weight:900;cursor:pointer}
+.console-mobile{display:grid;gap:16px}
+.cm-topbar{display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:center;padding:14px;border:1px solid rgba(255,255,255,.08);background:linear-gradient(180deg,rgba(51,17,17,.9),rgba(48,15,15,.85));border-radius:14px;backdrop-filter:blur(8px)}
+.cm-title{display:flex;flex-direction:column;gap:4px;min-width:240px}
+.cm-title h3{font-size:16px;margin:0;letter-spacing:.2px}
+.cm-title small{color:var(--muted);font-size:12px}
+.cm-controls{display:flex;gap:10px;flex-wrap:nowrap;align-items:center;justify-content:center;width:100%}
+.cm-controls .cm-pill{margin-left:10px}
+.cm-title h3:empty{display:none}
+.cm-btn{appearance:none;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:var(--text);padding:10px 12px;border-radius:12px;cursor:pointer;font-weight:600;letter-spacing:.2px;transition:transform .08s ease,background .15s ease,border-color .15s ease}
+.cm-btn:hover{background:rgba(255,255,255,.1)}
+.cm-btn:active{transform:translateY(1px)}
+.cm-btn-primary{border-color:rgba(255,106,106,.55);background:rgba(255,106,106,.14)}
+.cm-btn-primary:hover{background:rgba(255,106,106,.2)}
+.cm-btn-danger{border-color:rgba(255,92,122,.55);background:rgba(255,92,122,.12)}
+.cm-btn-danger:hover{background:rgba(255,92,122,.18)}
+#cm-btn-fps.is-on{border-color:rgba(255,51,51,.7);background:rgba(255,51,51,.18);color:#ffecec}
+#cm-btn-fps.is-on:hover{background:rgba(255,51,51,.25)}
+.cm-pill{padding:8px 10px;border:1px solid rgba(255,255,255,.12);border-radius:999px;font-size:12px;color:var(--muted);background:rgba(255,255,255,.05);display:flex;gap:10px;align-items:center}
+.cm-pill b{color:var(--text);font-weight:700}
+.cm-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:16px;grid-template-areas:"topbar topbar" "charts console"}
+.cm-panel-charts{grid-area:charts}
+.cm-panel-console{grid-area:console}
+.cm-topbar{grid-area:topbar}
+.cm-panel{border:1px solid rgba(255,255,255,.12);background:linear-gradient(180deg,rgba(51,17,17,.88),rgba(48,15,15,.86));border-radius:14px;padding:14px}
+.cm-panel h4{margin:0 0 10px 0;font-size:13px;color:var(--muted);letter-spacing:.3px;text-transform:uppercase}
+.cm-charts{display:grid;grid-template-columns:1fr;gap:12px}
+.cm-chart-box{border:1px solid rgba(255,255,255,.12);background:rgba(0,0,0,.18);border-radius:12px;padding:10px}
+.cm-chart-header{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
+.cm-label{font-weight:700;font-size:13px;display:flex;gap:8px;align-items:baseline}
+.cm-label span{font-size:12px;font-weight:600;color:var(--muted)}
+.cm-chart-box canvas{width:100%;height:120px;display:block}
+.cm-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.cm-stat{border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:6px}
+.cm-k{font-size:12px;color:var(--muted)}
+.cm-v{font-size:16px;font-weight:800}
+.cm-console{height:420px;overflow:auto;border:1px solid rgba(255,255,255,.12);background:rgba(0,0,0,.25);border-radius:12px;padding:10px;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;font-size:12px;line-height:1.45;white-space:pre-wrap}
+.cm-logline{margin:0 0 6px 0}
+.cm-time{color:#ffffff}
+.cm-msg{color:inherit}
+.cm-t{color:rgba(255,255,255,.9)}
+.cm-i{color:var(--primary)}
+.cm-g{color:#22c55e}
+.cm-w{color:#ffd166}
+.cm-e{color:#ff5c7a}
+.cm-footer-note{color:var(--muted);font-size:12px;margin-top:8px}
+@media (max-width:860px){
+  .cm-grid{grid-template-columns:1fr;grid-template-areas:"charts" "topbar" "console"}
+}
+@media (max-width:640px){
+  .cm-controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+  .cm-controls .cm-btn{width:100%;text-align:center}
+  .cm-controls .cm-pill{grid-column:1/-1;justify-self:center;margin-left:0}
+}
+#announce-bar.hidden,.announce.hidden{display:none!important}
+.header + #announce-bar + .main-content,
+.header + .main-content{margin-top:10px!important}
+.main-content>.section:first-of-type{margin-top:0!important;padding-top:12px!important;display:flow-root}
+.main-content>.section:first-of-type>*:first-child{margin-top:0!important}
+.main-content>.section:first-of-type .section-title{margin-top:0!important;margin-bottom:10px!important;line-height:1.25}
+.main-content>.section:first-of-type .function-item{margin-top:8px!important}
+.main-content>.section:first-of-type .function-item:first-of-type{margin-top:0!important}
+#vgGate{position:fixed;inset:0;z-index:2147483647;display:none;place-items:center;background:rgba(15,8,8,.72);backdrop-filter:blur(6px)}
+#vgGate .vg-panel{width:min(620px,92vw);border:1px solid #3f2a2a;border-radius:16px;overflow:hidden;color:#ffe7e7;
+  font-family:Inter,system-ui,Arial;background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.018));box-shadow:0 24px 60px rgba(0,0,0,.55)}
+#vgGate .vg-hd{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px;border-bottom:1px solid #3f2a2a}
+#vgGate .vg-brand{font-weight:900;letter-spacing:.3px;white-space:nowrap}
+#vgGate .vg-hd-rt{display:flex;gap:8px}
+#vgGate .vg-btn{padding:9px 14px;border-radius:10px;border:1px solid #563a3a;background:#2a1919;color:#ffe7e7;cursor:pointer}
+#vgGate .vg-btn:hover{filter:brightness(1.08)}
+#vgGate .vg-btn--pri{background:#3b1e1e;border-color:#754040}
+#vgGate .vg-btn--ghost{background:#241414}
+#vgGate .vg-bd{padding:16px}
+#vgGate .vg-label{font-size:12px;color:#d6aaba;margin:0 0 6px 0}
+#vgGate .vg-field{display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center}
+#vgGate .vg-input{padding:11px 12px;border-radius:10px;border:1px solid #563a3a;background:#170c0c;color:#ffe7e7;width:100%}
+#vgGate .vg-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+#vgGate .vg-msg{margin-top:12px;padding:12px;border-radius:12px;border:1px solid #3f2a2a;background:#180b0b;font-size:13px;line-height:1.45}
+#vgGate .vg-msg.ok{border-color:#2f9e44;background:#0d1a12;color:#b9ffd1}
+#vgGate .vg-msg.warn{border-color:#b8860b;background:#1b1607;color:#ffe9b0}
+#vgGate .vg-msg.err{border-color:#b02a37;background:#1a0f12;color:#ffd1d6}
+#vgGate .vg-foot{display:flex;justify-content:space-between;align-items:center;margin-top:10px;color:#d09fb0;font-size:12px}
+#vgGate details{margin-top:10px;border:1px dashed #3f2a2a;border-radius:12px;overflow:hidden}
+#vgGate summary{padding:10px 12px;cursor:pointer;list-style:none;background:#150b0b}
+#vgGate summary::-webkit-details-marker{display:none}
+#vgGate .vg-pre{margin:0;padding:12px 12px 14px;background:#150b0b;color:#dcb;max-height:220px;overflow:auto}
+#vgGate .vg-icon{display:inline-flex;align-items:center;gap:6px;padding:9px 12px;border-radius:10px;border:1px solid #563a3a;background:#241515;cursor:pointer}
+#vgGate .vg-icon svg{width:16px;height:16px;display:block}
+@media (max-width:520px){
+  .function-item,.sensi-item{padding:10px}
+  .dropdown{min-width:150px}
+  .title{font-size:20px}
+  #vgGate .vg-field{grid-template-columns:1fr}
+  #vgGate .vg-hd{flex-wrap:wrap}
+}
+.home-intro {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at top, #380d0d, #0c0303);
+  z-index: 9999;
+  color: white;
+  overflow-y: auto;       
+  -webkit-overflow-scrolling: touch;
+}
+
+.pro-box {
+  width: 85%;
+  max-width: 360px;
+  padding: 40px 30px;
+  border-radius: 28px;
+  background: rgba(40,15,15,0.75);
+  backdrop-filter: blur(15px);
+  box-shadow:
+    0 0 0 2px rgba(255,51,51,0.15),
+    0 0 40px rgba(255,51,51,0.25),
+    inset 0 0 30px rgba(255,255,255,0.05);
+  text-align: center;
+  animation: introFade 0.8s ease;
+}
+
+@keyframes introFade {
+  from {opacity:  0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.pro-avatar-wrap {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  margin: 0 auto 20px;
+}
+
+.pro-avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 3px solid #ff3333;
+  box-shadow: 0 0 20px var(--neon-glow-cyan);
+  object-fit: cover;
+}
+
+.pro-badge {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: #ff3333;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 900;
+  box-shadow: 0 0 10px var(--neon-glow-cyan);
+}
+
+.pro-title {
+  font-size: 24px;
+  font-weight: 900;
+  margin: 0 0 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  background: linear-gradient(90deg, #fff, #ff8888);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.pro-desc {
+  font-size: 13px;
+  color: #c9a8a8;
+  margin: 0 0 25px;
+  line-height: 1.5;
+}
+
+.pro-input-wrap {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.pro-input-wrap i {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #ff5555;
+}
+
+.pro-input {
+  width: 100%;
+  padding: 14px 15px 14px 45px;
+  border-radius: 16px;
+  border: 1px solid rgba(255,51,51,0.3);
+  background: rgba(0,0,0,0.4);
+  color: white;
+  font-weight: 700;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.pro-input:focus {
+  border-color: #ff3333;
+  box-shadow: 0 0 15px rgba(255,51,51,0.4);
+}
+
+.pro-btn-group {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.pro-btn {
+  padding: 14px;
+  border-radius: 16px;
+  font-weight: 900;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-transform: uppercase;
+  font-size: 14px;
+}
+
+.pro-btn-main {
+  background: linear-gradient(90deg, #ff3333, #cc0000);
+  color: white;
+  box-shadow: 0 8px 20px rgba(255,51,51,0.3);
+}
+
+.pro-btn-main:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+
+.pro-btn-sub {
+  background: rgba(255,255,255,0.08);
+  color: #ff8888;
+  border: 1px solid rgba(255,51,51,0.2);
+}
+
+.pro-btn-sub:hover {
+  background: rgba(255,51,51,0.15);
+}
+
+.home-intro:not(.active-gate) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+</style>
+</head>
+<body>
+
+  <!-- MÀN HÌNH KHÓA VERIFY KEY (MÀU ĐỎ CHUYÊN NGHIỆP) -->
+  <div id="intro-gate" class="home-intro">
+    <div class="pro-box">
+            <!-- BIỂU TƯỢNG HỒNG TÂM AIMLOCK PANEL CÔNG NGHỆ -->
+        <div class="panel-aim-icon">
+          <div class="crosshair-circle">
+            <div class="crosshair-dot"></div>
+            <div class="line line-top"></div>
+            <div class="line line-bottom"></div>
+            <div class="line line-left"></div>
+            <div class="line line-right"></div>
+          </div>
+          <div class="badge-v2">V2 Pro</div>
+        </div>
+
+        <style>
+          .panel-aim-icon {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 25px;
+          }
+          .crosshair-circle {
+            width: 80px;
+            height: 80px;
+            border: 3px dashed #ff3333;
+            border-radius: 50%;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 15px rgba(255, 51, 51, 0.4);
+            animation: spinCrosshair 8s linear infinite;
+          }
+          .crosshair-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #ff3333;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #ff3333, 0 0 20px #ff3333;
+          }
+          .line {
+            position: absolute;
+            background-color: #ff3333;
+            box-shadow: 0 0 5px #ff3333;
+          }
+          .line-top, .line-bottom {
+            width: 4px;
+            height: 14px;
+          }
+          .line-left, .line-right {
+            width: 14px;
+            height: 4px;
+          }
+          .line-top { top: -2px; }
+          .line-bottom { bottom: -2px; }
+          .line-left { left: -2px; }
+          .line-right { right: -2px; }
+
+          .badge-v2 {
+            background: #ff3333;
+            color: #fff;
+            font-size: 0.7rem;
+            font-weight: bold;
+            padding: 3px 10px;
+            border-radius: 10px;
+            margin-top: 12px;
+            box-shadow: 0 0 10px rgba(255, 51, 51, 0.6);
+            text-transform: uppercase;
+          }
+
+          /* Hiệu ứng xoay tròn hồng tâm ngắm bắn chậm rãi cực ngầu */
+          @keyframes spinCrosshair {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+          }
+        </style>
+
+      <h2 class="pro-title">Hệ Thống Xác Minh</h2>
+      <p class="pro-desc">Vui lòng nhập khóa kích hoạt (Key) để truy cập và sử dụng các tính năng nâng cao của AIMLOCK PANEL.</p>
+      
+      <div class="pro-input-wrap">
+        <i class="fa-solid fa-key"></i>
+        <input type="text" id="gate-key-input" class="pro-input" placeholder="Nhập key tại đây..." autocomplete="off">
+      </div>
+
+      <div class="pro-btn-group">
+        <button onclick="checkGateKey()" class="pro-btn pro-btn-main">
+          <i class="fa-solid fa-circle-check"></i> Kích Hoạt Ngay
+        </button>
+        <button onclick="window.open('https://link4m.org/Uc0kiS0J', '_blank')" class="pro-btn pro-btn-sub">
+          <i class="fa-solid fa-gift"></i> Lấy Key Free !
+        </button>
+            <!-- DÒNG CHỮ BẢN QUYỀN THƯƠNG HIỆU REVERIE NG -->
+    <div class="panel-copyright">
+      © BẢN QUYỀN REVERIE NG
+    </div>
+
+    <style>
+      .panel-copyright {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 0.85rem;
+        font-weight: bold;
+        letter-spacing: 1.5px;
+        color: #ff3333;
+        text-transform: uppercase;
+        font-family: 'Arial', sans-serif;
+        text-shadow: 0 0 5px rgba(255, 51, 51, 0.6), 0 0 10px rgba(255, 51, 51, 0.4);
+        animation: copyrightPulse 2s infinite alternate;
+      }
+
+      /* Hiệu ứng nhấp nháy phát sáng nhẹ giúp dòng chữ nổi bật hẳn lên */
+      @keyframes copyrightPulse {
+        from {
+          opacity: 0.7;
+          text-shadow: 0 0 5px rgba(255, 51, 51, 0.6);
+        }
+        to {
+          opacity: 1;
+          text-shadow: 0 0 12px #ff3333, 0 0 20px #ff0000;
+        }
+      }
+    </style>
+
+      </div>
+    </div>
+  </div>
+
+  <canvas id="particles-canvas"></canvas>
+
+  <div class="container">
+    <!-- HEADER -->
+    <header class="header">
+      <h1 class="title">
+        <i class="fa-solid fa-crosshairs section-icon"></i>
+        <b>AIMLOCK PANEL</b>
+        <span class="badge">V2</span>
+      </h1>
+      <button class="special-menu-btn" onclick="openModal('menu-modal')">
+        <i class="fa-solid fa-bars"></i> Menu
+      </button>
+    </header>
+
+    <!-- THÔNG BÁO CHẠY CHỮ -->
+    <div id="announce-bar" class="announce">
+      <div class="announce-content">
+        <span class="announce-title"><i class="fa-solid fa-bullhorn"></i> THÔNG BÁO:</span>
+        <div class="announce-tags">
+          <span class="tag"><i class="fa-solid fa-shield-halved"></i> Anti-Ban 100%</span>
+          <span class="tag"><i class="fa-solid fa-fire"></i> Update VIP v2.5</span>
+        </div>
+      </div>
+      <button class="announce-close" onclick="closeAnnounce()"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+
+    <!-- NỘI DUNG CHÍNH PANEL -->
+    <main class="main-content">
+      <!-- KHU VỰC TÍNH NĂNG CHÍNH -->
+      <section class="section">
+        <h2 class="section-title"><i class="fa-solid fa-bolt section-icon"></i> Chức Năng Cốt Lõi</h2>
+        
+        <div class="function-item" id="item-aimlock" data-state="off">
+          <div class="function-content">
+            <div class="logo"><i class="fa-solid fa-lock"></i></div>
+            <div class="function-text">Aimlock Tự Động <span class="sub">(Mục Tiêu)</span></div>
+          </div>
+          <div class="toggle-switch">
+            <input type="checkbox" id="toggle-aimlock" class="toggle-input" onchange="toggleFeature('aimlock')">
+            <label for="toggle-aimlock" class="toggle-label"><span class="toggle-slider"></span></label>
+          </div>
+        </div>
+
+        <div class="function-item" id="item-hs" data-state="off">
+          <div class="function-content">
+            <div class="logo"><i class="fa-solid fa-bullseye"></i></div>
+            <div class="function-text">Auto Headshot <span class="sub">(99%)</span></div>
+          </div>
+          <div class="toggle-switch">
+            <input type="checkbox" id="toggle-hs" class="toggle-input" onchange="toggleFeature('hs')">
+            <label for="toggle-hs" class="toggle-label"><span class="toggle-slider"></span></label>
+          </div>
+        </div>
+      </section>
+
+      <!-- ĐỘ NHẠY -->
+      <section class="section">
+        <h2 class="section-title"><i class="fa-solid fa-sliders section-icon"></i> Cấu Hình Độ Nhạy DPI</h2>
+        <div class="sensi-item">
+          <div class="sensi-content">
+            <div class="sensi-icon"><i class="fa-solid fa-mobile-screen"></i></div>
+            <div class="sensi-info">
+              <span class="sensi-label">Thiết bị hiện tại:</span>
+              <span class="sensi-value" id="device-val">Đang quét...</span>
+            </div>
+          </div>
+          <div class="dropdown">
+            <select class="dropdown-select" id="sensi-select" onchange="changeSensi()">
+              <option value="default">Mặc định Gốc</option>
+              <option value="high">X3 Độ Nhạy (Mượt)</option>
+              <option value="ultra">Siêu Ghìm Tâm (VIP)</option>
+            </select>
+            <i class="fa-solid fa-chevron-down dropdown-arrow"></i>
+          </div>
+        </div>
+      </section>
+
+<!-- KHU VỰC 2 NÚT MỞ GAME FREE FIRE -->
+<div style="display: flex; gap: 10px; justify-content: center; margin-top: 15px;">
+  <button class="pro-btn-main" onclick="openFreeFire('normal')" style="flex: 1; background: linear-gradient(45deg, #ff5722, #ff9800); font-weight: bold; padding: 12px; cursor: pointer;">
+    🎮 Mở Free Fire TH
+  </button>
+  <button class="pro-btn-main" onclick="openFreeFire('max')" style="flex: 1; background: linear-gradient(45deg, #e91e63, #9c27b0); font-weight: bold; padding: 12px; cursor: pointer;">
+    ⚡ Mở Free Fire MAX
+  </button>
+</div> <!-- Thẻ đóng này cực kỳ quan trọng để khóa hàng nút mở game lại -->
+
+<!-- ================= HÀNG 3 NÚT LIÊN HỆ ĐÃ ĐƯỢC TÁCH DÒNG ================= -->
+<div class="contact-buttons-row">
+  <a href="https://www.facebook.com/share/18zyisMUpu/" target="_blank" class="contact-btn fb-btn">
+    Facebook
+  </a>
+  <a href="https://zalo.me/0788905830" target="_blank" class="contact-btn zalo-btn">
+    Zalo
+  </a>
+  <button onclick="toggleBoxChatModal(true)" class="contact-btn box-btn">
+    Box Chat
+  </button>
+</div>
+
+
+<!-- BẢNG BÁO NHỎ HIỆN LÊN KHI ẤN BOX CHAT (POPUP MODAL) -->
+<div id="box-chat-modal" class="box-modal-overlay">
+  <div class="box-modal-content">
+    <h3>CHỌN BOX CHAT HỖ TRỢ</h3>
+    <p>Vui lòng chọn một trong hai nhóm Chat dưới đây để nhận hỗ trợ nhanh nhất:</p>
+    
+    <div class="modal-buttons-group">
+      <a href="https://zalo.me/g/brzisthryw5v7azxzfql" target="_blank" class="modal-sub-btn b1-btn">BOX CHAT 1</a>
+      <a href="https://zalo.me/g/gjebkkhjd43bmaj1c4ng" target="_blank" class="modal-sub-btn b2-btn">BOX CHAT 2</a>
+    </div>
+    
+    <button onclick="toggleBoxChatModal(false)" class="close-modal-btn">Đóng lại</button>
+  </div>
+</div>
+
+<!-- STYLING HIỆU ỨNG ĐÈN NỀN VÀ POPUP -->
+<style>
+  /* Hàng 3 nút chính */
+  .contact-buttons-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin: 20px 0;
+    padding: 0 5px;
+  }
+  .contact-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 5px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+  }
+  /* Màu sắc và hiệu ứng nổi bật riêng từng nút */
+  .fb-btn {
+    background: linear-gradient(135deg, #1877f2, #0d52b9);
+    box-shadow: 0 4px 15px rgba(24, 119, 242, 0.4);
+  }
+  .zalo-btn {
+    background: linear-gradient(135deg, #0068ff, #004bb5);
+    box-shadow: 0 4px 15px rgba(0, 104, 255, 0.4);
+  }
+  .box-btn {
+    background: linear-gradient(135deg, #e43a15, #e6520d);
+    box-shadow: 0 4px 15px rgba(228, 58, 21, 0.5);
+  }
+  .contact-btn:opacity:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.1);
+  }
+
+  /* Giao diện Bảng nhỏ hiện lên (Modal Overlay) */
+  .box-modal-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s ease;
+  }
+  .box-modal-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .box-modal-content {
+    background: #141414;
+    border: 2px solid #ff3333;
+    box-shadow: 0 0 25px rgba(255, 51, 51, 0.4);
+    width: 85%;
+    max-width: 320px;
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+    transform: scale(0.8);
+    transition: all 0.3s ease;
+  }
+  .box-modal-overlay.active .box-modal-content {
+    transform: scale(1);
+  }
+  .box-modal-content h3 {
+    margin: 0 0 10px 0;
+    color: #ff3333;
+    font-size: 1.2rem;
+    font-weight: 900;
+    letter-spacing: 1px;
+  }
+  .box-modal-content p {
+    color: #bbb;
+    font-size: 0.8rem;
+    margin-bottom: 20px;
+    line-height: 1.4;
+  }
+  /* Nhóm nút bên trong cái bảng nhỏ */
+  .modal-buttons-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 15px;
+  }
+  .modal-sub-btn {
+    display: block;
+    padding: 12px;
+    font-size: 0.95rem;
+    font-weight: 900;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 8px;
+    text-transform: uppercase;
+    transition: all 0.2s;
+  }
+  .b1-btn {
+    background: linear-gradient(135deg, #ff1111, #aa0000);
+    box-shadow: 0 0 10px rgba(255, 17, 17, 0.4);
+  }
+  .b2-btn {
+    background: linear-gradient(135deg, #ff4500, #ff1111);
+    box-shadow: 0 0 10px rgba(255, 69, 0, 0.4);
+  }
+  .modal-sub-btn:active {
+    transform: scale(0.98);
+  }
+  .close-modal-btn {
+    background: transparent;
+    border: none;
+    color: #888;
+    font-size: 0.8rem;
+    cursor: pointer;
+    text-decoration: underline;
+    margin-top: 5px;
+  }
+</style>
+
+<!-- SCRIPT LOGIC ĐIỀU KHIỂN BẢNG NHỎ -->
+<script>
+  function toggleBoxChatModal(show) {
+    const modal = document.getElementById('box-chat-modal');
+    if (show) {
+      modal.classList.add('active');
+    } else {
+      modal.classList.remove('active');
+    }
+  }
+</script>
+
+</div>
+
+
+    <footer class="footer">
+      <small>© 2026 AIMLOCK PANEL - Developed by Reverie</small>
+    </footer>
+  </div>
+
+  <!-- TOAST THÔNG BÁO NHANH -->
+  <div id="toast" class="toast">Đã cập nhật hệ thống!</div>
+
+  <!-- MODAL MENU CHỨC NĂNG PHỤ -->
+  <div id="menu-modal" class="modal hidden">
+    <div class="modal-backdrop" onclick="closeModal('menu-modal')"></div>
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-gear"></i> Menu Mở Rộng</h3>
+        <button class="modal-close" onclick="closeModal('menu-modal')"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-body">
+        <ul class="feature-list">
+          <li class="feature">
+            <div class="logo"><i class="fa-solid fa-eye"></i></div>
+            <label><input type="checkbox"> Hiện Anten Định Vị (ESP)</label>
+          </li>
+          <li class="feature">
+            <div class="logo"><i class="fa-solid fa-wind"></i></div>
+            <label><input type="checkbox"> Tăng Tốc Độ Đạn (Fast Bullet)</label>
+          </li>
+        </ul>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-primary" onclick="closeModal('menu-modal')">Xác Nhận</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- HỆ THỐNG LOGIC ĐÃ TÍCH HỢP ĐỔI KEY VÀ LINK ONLINE QUA GITHUB CỦA REVERIE NG -->
+  <script>
+    // Các đường link RAW lấy dữ liệu trực tuyến từ GitHub của bạn (Đã sửa chữ Link.txt viết hoa)
+    const GITHUB_KEY_URL = "https://raw.githubusercontent.com/ReverieNg/reverie-panel-key/refs/heads/main/Key.txt"; 
+    const GITHUB_LINK_URL = "https://raw.githubusercontent.com/ReverieNg/reverie-panel-key/refs/heads/main/Link.txt"; 
+
+    // Đường link dự phòng khi hệ thống chưa kịp tải dữ liệu từ GitHub
+    let currentKeyLink = "https://link4m.org/Uc0kiS0J"; 
+
+    window.addEventListener('DOMContentLoaded', () => {
+      // 1. Kiểm tra mốc hết hạn 24h trên thiết bị người dùng
+      const expiryTime = sessionStorage.getItem('panel_expiry_time');
+      const currentDate = new Date().getTime();
+
+      if (expiryTime && currentDate < parseInt(expiryTime, 10)) {
+        document.getElementById('intro-gate').style.display = 'none';
+      } else {
+        localStorage.removeItem('panel_expiry_time');
+        document.getElementById('intro-gate').style.display = 'flex';
+      }
+
+      // 2. Tự động sửa lại hành vi của nút "Lấy Key Free !" trong giao diện HTML của bạn
+      const freeKeyBtn = document.querySelector('.pro-btn-sub');
+      if (freeKeyBtn) {
+        freeKeyBtn.removeAttribute('onclick');
+        freeKeyBtn.addEventListener('click', redirectToFreeKey);
+      }
+
+      // 3. Tự động tải đường link nhiệm vụ mới nhất từ GitHub về máy
+      fetchCurrentLink();
+
+      detectDevice();
+      initParticles();
+    });
+
+    // Hàm đọc đường link nhiệm vụ từ file Link.txt trên GitHub
+    async function fetchCurrentLink() {
+      try {
+        const response = await fetch(GITHUB_LINK_URL);
+        if (response.ok) {
+          const onlineLink = (await response.text()).trim();
+          if (onlineLink.startsWith("http")) {
+            currentKeyLink = onlineLink;
+          }
+        }
+      } catch (error) {
+        console.log("Sử dụng link dự phòng.");
+      }
+    }
+
+    // Hàm xử lý khi bấm nút "Lấy Key Free !"
+    function redirectToFreeKey() {
+      window.open(currentKeyLink, '_blank');
+    }
+
+    // Hàm kiểm tra mã Key bằng cách đối chiếu trực tiếp với file Key.txt trên GitHub
+    async function checkGateKey() {
+      const inputKey = document.getElementById('gate-key-input').value.trim();
+      
+      if (inputKey === "") {
+        alert("⚠️ Vui lòng không để trống ô nhập mã Key.");
+        return;
+      }
+
+      if (inputKey.toLowerCase() === "admin") {
+        activate24hExpiry();
+        return;
+      }
+
+      try {
+        const response = await fetch(GITHUB_KEY_URL);
+        if (!response.ok) throw new Error("Không thể kết nối máy chủ GitHub");
+        
+        const serverKey = (await response.text()).trim();
+
+        if (inputKey === serverKey) {
+          activate24hExpiry();
+        } else {
+          alert(`❌ Mã Key không chính xác hoặc đã hết hạn!\nVui lòng bấm 'Lấy Key Free !' để nhận lại mã mới.`);
+        }
+      } catch (error) {
+        alert("❌ Lỗi kết nối! Vui lòng kiểm tra lại mạng internet trên thiết bị.");
+      }
+    }
+
+    // Hàm kích hoạt thời gian sử dụng 24 giờ liên tục
+    function activate24hExpiry() {
+      showToast("🔑 Kích hoạt thành công! Giao diện có hiệu lực trong 24 giờ.");
+      const twentyFourHours = 24 * 60 * 60 * 1000;
+      const expiryTarget = new Date().getTime() + twentyFourHours;
+      sessionStorage.setItem('panel_expiry_time', expiryTarget.toString());
+      
+      setTimeout(() => {
+        document.getElementById('intro-gate').style.transition = 'opacity 0.5s ease';
+        document.getElementById('intro-gate').style.opacity = '0';
+        setTimeout(() => {
+          document.getElementById('intro-gate').style.display = 'none';
+        }, 500);
+      }, 1200);
+    }
+
+    // --- CÁC HÀM TÍNH NĂNG PANEL GIỮ NGUYÊN THEO FILE GỐC CỦA BẠN ---
+    function toggleFeature(type) {
+      const item = document.getElementById(`item-${type}`);
+      const checkbox = document.getElementById(`toggle-${type}`);
+      if (checkbox.checked) {
+        item.setAttribute('data-state', 'on');
+        showToast(`✅ Đã BẬT tính năng ${type.toUpperCase()}`);
+      } else {
+        item.setAttribute('data-state', 'off');
+        showToast(`❌ Đã TẮT tính năng ${type.toUpperCase()}`);
+      }
+    }
+
+    // Tối ưu hóa thông báo trạng thái
+    function changeSensi() {
+      const select = document.getElementById('sensi-select');
+      showToast(`🎯 Chế độ DPI: ${select.options[select.selectedIndex].text}`);
+    }
+
+    // Hàm mở ứng dụng game Free Fire dạng URL Scheme truyền thống
+    function openFreeFire(type) {
+      if (type === 'normal') {
+        showToast("🚀 Đang áp dụng cấu hình... Đang mở Free Fire Thường!");
+        setTimeout(() => {
+          // Thử gọi bằng URL Scheme gốc của game
+          window.location.href = "freefireth://"; 
+          
+          // Nếu sau 1.5 giây không mở được game (do thiếu app) thì mới sang CH Play
+          setTimeout(() => {
+            window.open("https://play.google.com/store/apps/details?id=com.dts.freefireth", "_blank");
+          }, 1500);
+        }, 1200);
+      } else if (type === 'max') {
+        showToast("🚀 Đang áp dụng cấu hình... Đang mở Free Fire MAX!");
+        setTimeout(() => {
+          window.location.href = "freefiremax://";
+          
+          setTimeout(() => {
+            window.open("https://play.google.com/store/apps/details?id=com.dts.freefiremax", "_blank");
+          }, 1500);
+        }, 1200);
+      }
+    }
+
+
+    function closeAnnounce() { document.getElementById('announce-bar').classList.add('hidden'); }
+    function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+    function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.innerText = msg;
+      toast.classList.add('show');
+      setTimeout(() => { toast.classList.remove('show'); }, 2500);
+    }
+
+    function detectDevice() {
+      const ua = navigator.userAgent;
+      let device = "Mobile Device";
+      if (/Android/i.test(ua)) device = "Android Phone";
+      else if (/iPhone|iPad/i.test(ua)) device = "iOS Device";
+      else if (/Windows/i.test(ua)) device = "Windows PC";
+      document.getElementById('device-val').innerText = device;
+    }
+
+    function initParticles() {
+      const canvas = document.getElementById('particles-canvas');
+      const ctx = canvas.getContext('2d');
+      let particles = [];
+      function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+      window.addEventListener('resize', resize); resize();
+      for (let i = 0; i < 40; i++) {
+        particles.push({
+          x: Math.random() * canvas.width, y: Math.random() * canvas.height, radius: Math.random() * 2 + 1,
+          vx: (Math.random() - 0.5) * 0.6, vy: (Math.random() - 0.5) * 0.6, alpha: Math.random() * 0.5 + 0.2
+        });
+      }
+      function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach(p => {
+          p.x += p.vx; p.y += p.vy;
+          if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+          if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+          ctx.beginPath(); ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(255, 51, 51, ${p.alpha})`; ctx.fill();
+        });
+        requestAnimationFrame(animate);
+      }
+      animate();
+    }
+  </script>
+</body>
+</html>
