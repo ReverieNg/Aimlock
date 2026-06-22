@@ -944,30 +944,20 @@ input,select,textarea{font-size:16px}
 
         // Hàm mở ứng dụng game Free Fire đã sửa lỗi ERR_UNKNOWN_URL_SCHEME cho App APK
     function openFreeFire(type) {
-  let packageName = "com.dts.freefireth";
-  let oldScheme = "freefireth://";
+  let packageName = "com.dts.freefireth"; // Mặc định bản thường
   
   if (type === 'normal') {
     showToast("🚀 Đang áp dụng cấu hình... Đang mở Free Fire Thường!");
   } else if (type === 'max') {
-    packageName = "com.dts.freefiremax";
-    oldScheme = "freefiremax://";
+    packageName = "com.dts.freefiremax"; // Bản MAX
     showToast("🚀 Đang áp dụng cấu hình... Đang mở Free Fire MAX!");
   }
 
   setTimeout(() => {
-    // Thử mở bằng scheme trực tiếp (App APK có thể nhận diện tốt hơn link intent)
-    window.location.href = oldScheme;
-    
-    // Dự phòng: Sau 1.5 giây nếu không tự mở game, sẽ mở link CH Play
-    setTimeout(() => {
-      window.open("https://play.google.com/store/apps/details?id=" + packageName, "_blank");
-    }, 1500);
+    // Ép app APK mở link CH Play chuẩn web qua cửa sổ mới (_blank) để kích hoạt mở game
+    window.open("https://play.google.com/store/apps/details?id=" + packageName, "_blank");
   }, 1200);
     }
-
-    
-
 
     function closeAnnounce() { document.getElementById('announce-bar').classList.add('hidden'); }
     function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
