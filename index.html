@@ -858,29 +858,40 @@ input,select,textarea{font-size:16px}
     // Đường link dự phòng khi hệ thống chưa kịp tải dữ liệu từ GitHub
     let currentKeyLink = "https://link4m.org/Uc0kiS0J"; 
 
-      window.addEventListener('DOMContentLoaded', () => {
-    // Kiểm tra xem người dùng có tích chọn ghi nhớ key từ trước không
+        window.addEventListener('DOMContentLoaded', async () => {
+    // 1. Luôn tải Key mới nhất trực tuyến từ GitHub về để đối chiếu trước
+    let serverKey = "";
+    try {
+      const response = await fetch(GITHUB_KEY_URL);
+      if (response.ok) {
+        serverKey = (await response.text()).trim();
+      }
+    } catch (e) {
+      console.log("Lỗi kết nối máy chủ GitHub");
+    }
+
+    // 2. Lấy Key và thời gian đã lưu trên thiết bị người dùng
+    const savedKey = localStorage.getItem('panel_saved_key') || sessionStorage.getItem('panel_saved_key');
     const isRemembered = localStorage.getItem('panel_remember_state') === 'true';
     const savedExpiry = isRemembered 
       ? localStorage.getItem('panel_expiry_time') 
       : sessionStorage.getItem('panel_expiry_time');
     
-    if (savedExpiry) {
-      const currentTime = new Date().getTime();
-      if (currentTime < parseInt(savedExpiry, 10)) {
-        // Còn hạn trong 24h: Vào thẳng giao diện chính luôn
-        document.getElementById('intro-gate').style.display = 'none';
-      } else {
-        // Hết hạn: Xóa sạch bộ nhớ cũ để bắt nhập lại key mới
-        localStorage.removeItem('panel_expiry_time');
-        localStorage.removeItem('panel_remember_state');
-        sessionStorage.removeItem('panel_expiry_time');
-        document.getElementById('intro-gate').style.display = 'flex';
-      }
+    const currentTime = new Date().getTime();
+
+    // 3. Kiểm tra: Phải đúng Key hiện tại trên GitHub + Còn hạn 24h thì mới cho vào thẳng
+    if (savedExpiry && savedKey === serverKey && currentTime < parseInt(savedExpiry, 10)) {
+      document.getElementById('intro-gate').style.display = 'none';
     } else {
+      // Nếu bạn đổi Key trên GitHub hoặc hết hạn -> Xóa sạch bộ nhớ, đá ra màn hình khóa bắt nhập lại
+      localStorage.removeItem('panel_expiry_time');
+      localStorage.removeItem('panel_remember_state');
+      localStorage.removeItem('panel_saved_key');
+      sessionStorage.removeItem('panel_expiry_time');
+      sessionStorage.removeItem('panel_saved_key');
       document.getElementById('intro-gate').style.display = 'flex';
     }
-        
+          
 
       // 2. Tự động sửa lại hành vi của nút "Lấy Key Free !" trong giao diện HTML của bạn
       const freeKeyBtn = document.querySelector('.pro-btn-sub');
@@ -953,17 +964,22 @@ function activate24hExpiry() {
   const twentyFourHours = 24 * 60 * 60 * 1000;
   const expiryTarget = new Date().getTime() + twentyFourHours;
   
-  // Kiểm tra trạng thái nút tích chọn
+  // Lấy giá trị chuỗi Key mà người dùng vừa nhập vào ô input
+  const inputKey = document.getElementById('gate-key-input').value.trim();
+  
+  // Kiểm tra trạng thái nút tích chọn ghi nhớ
   const isRemember = document.getElementById('remember-key').checked;
   
   if (isRemember) {
-    // Nếu có tích: Lưu vào localStorage (Tắt app vào lại vẫn còn hạn)
+    // Nếu tích chọn: Lưu thời hạn, trạng thái và giá trị Key vào bộ nhớ lâu dài (localStorage)
     localStorage.setItem('panel_expiry_time', expiryTarget.toString());
     localStorage.setItem('panel_remember_state', 'true');
+    localStorage.setItem('panel_saved_key', inputKey);
   } else {
-    // Nếu không tích: Lưu vào sessionStorage (Tắt app, thoát ra là mất ngay)
+    // Nếu không tích chọn: Lưu Key và thời hạn vào bộ nhớ tạm thời (sessionStorage)
     sessionStorage.setItem('panel_expiry_time', expiryTarget.toString());
-    localStorage.removeItem('panel_remember_state');
+    sessionStorage.setItem('panel_saved_key', inputKey);
+    localStorage.removeItem('panel_remember_state'); // Xóa trạng thái ghi nhớ cũ nếu có
   }
 
   setTimeout(() => {
@@ -973,7 +989,8 @@ function activate24hExpiry() {
       document.getElementById('intro-gate').style.display = 'none';
     }, 500);
   }, 1200);
-}
+    }
+    
   
     
     // --- CÁC HÀM TÍNH NĂNG PANEL GIỮ NGUYÊN THEO FILE GỐC CỦA BẠN ---
