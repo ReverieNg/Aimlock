@@ -909,7 +909,7 @@ input,select,textarea{font-size:16px}
 
     // Hàm kích hoạt thời gian sử dụng 24 giờ liên tục
     function activate24hExpiry() {
-      showToast("🔑 Kích hoạt thành công! Giao diện có hiệu lực trong 24 giờ.");
+      showToast("🔑 Kích hoạt thành công!\nGiao diện có hiệu lực trong 24 giờ.");
       const twentyFourHours = 24 * 60 * 60 * 1000;
       const expiryTarget = new Date().getTime() + twentyFourHours;
       sessionStorage.setItem('panel_expiry_time', expiryTarget.toString());
