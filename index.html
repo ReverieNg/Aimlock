@@ -942,30 +942,23 @@ input,select,textarea{font-size:16px}
       showToast(`🎯 Chế độ DPI: ${select.options[select.selectedIndex].text}`);
     }
 
-    // Hàm mở ứng dụng game Free Fire dạng URL Scheme truyền thống
+        // Hàm mở ứng dụng game Free Fire đã sửa lỗi ERR_UNKNOWN_URL_SCHEME cho App APK
     function openFreeFire(type) {
+      let packageName = "com.dts.freefireth"; // Mặc định là bản thường
+      
       if (type === 'normal') {
         showToast("🚀 Đang áp dụng cấu hình... Đang mở Free Fire Thường!");
-        setTimeout(() => {
-          // Thử gọi bằng URL Scheme gốc của game
-          window.location.href = "freefireth://"; 
-          
-          // Nếu sau 1.5 giây không mở được game (do thiếu app) thì mới sang CH Play
-          setTimeout(() => {
-            window.open("https://play.google.com/store/apps/details?id=com.dts.freefireth", "_blank");
-          }, 1500);
-        }, 1200);
       } else if (type === 'max') {
+        packageName = "com.dts.freefiremax"; // Đổi sang package bản MAX
         showToast("🚀 Đang áp dụng cấu hình... Đang mở Free Fire MAX!");
-        setTimeout(() => {
-          window.location.href = "freefiremax://";
-          
-          setTimeout(() => {
-            window.open("https://play.google.com/store/apps/details?id=com.dts.freefiremax", "_blank");
-          }, 1500);
-        }, 1200);
       }
+
+      setTimeout(() => {
+        // Ghép thành đường dẫn Intent chuẩn Android để gọi hệ điều hành mở game mượt mà
+        window.location.href = `intent://#Intent;package=${packageName};scheme=freefireth;end;`;
+      }, 1200);
     }
+    
 
 
     function closeAnnounce() { document.getElementById('announce-bar').classList.add('hidden'); }
