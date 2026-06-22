@@ -908,21 +908,21 @@ input,select,textarea{font-size:16px}
     }
 
     // Hàm kích hoạt thời gian sử dụng 24 giờ liên tục
-  function showToast(msg) {
-  const toast = document.getElementById('toast');
-  
-  // Đổi chữ vế đầu và tự động bẻ hàng vế sau
-  toast.innerText = "🔑 Kích hoạt thành công!\n" + msg;
-  
-  // Căn giữa chữ và cấu hình hộp co giãn đều
-  toast.style.whiteSpace = 'pre-line';
-  toast.style.textAlign = 'center';
-  toast.style.width = 'max-content';
-  toast.style.maxWidth = '90%';
-  
-  toast.classList.add('show');
-  setTimeout(() => { toast.classList.remove('show'); }, 2500);
+  function activate24hExpiry() {
+      showToast("🔑 Kích hoạt thành công! Giao diện có hiệu lực trong 24 giờ.");
+      const twentyFourHours = 24 * 60 * 60 * 1000;
+      const expiryTarget = new Date().getTime() + twentyFourHours;
+      sessionStorage.setItem('panel_expiry_time', expiryTarget.toString());
+      
+      setTimeout(() => {
+        document.getElementById('intro-gate').style.transition = 'opacity 0.5s ease';
+        document.getElementById('intro-gate').style.opacity = '0';
+        setTimeout(() => {
+          document.getElementById('intro-gate').style.display = 'none';
+        }, 500);
+      }, 1200);
   }
+    
     
     // --- CÁC HÀM TÍNH NĂNG PANEL GIỮ NGUYÊN THEO FILE GỐC CỦA BẠN ---
     function toggleFeature(type) {
