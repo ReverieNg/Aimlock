@@ -836,17 +836,29 @@ input,select,textarea{font-size:16px}
     // Đường link dự phòng khi hệ thống chưa kịp tải dữ liệu từ GitHub
     let currentKeyLink = "https://link4m.org/Uc0kiS0J"; 
 
-    window.addEventListener('DOMContentLoaded', () => {
-      // 1. Kiểm tra mốc hết hạn 24h trên thiết bị người dùng
-      const expiryTime = sessionStorage.getItem('panel_expiry_time');
-      const currentDate = new Date().getTime();
-
-      if (expiryTime && currentDate < parseInt(expiryTime, 10)) {
+      window.addEventListener('DOMContentLoaded', () => {
+    // Kiểm tra xem người dùng có tích chọn ghi nhớ key từ trước không
+    const isRemembered = localStorage.getItem('panel_remember_state') === 'true';
+    const savedExpiry = isRemembered 
+      ? localStorage.getItem('panel_expiry_time') 
+      : sessionStorage.getItem('panel_expiry_time');
+    
+    if (savedExpiry) {
+      const currentTime = new Date().getTime();
+      if (currentTime < parseInt(savedExpiry, 10)) {
+        // Còn hạn trong 24h: Vào thẳng giao diện chính luôn
         document.getElementById('intro-gate').style.display = 'none';
       } else {
+        // Hết hạn: Xóa sạch bộ nhớ cũ để bắt nhập lại key mới
         localStorage.removeItem('panel_expiry_time');
+        localStorage.removeItem('panel_remember_state');
+        sessionStorage.removeItem('panel_expiry_time');
         document.getElementById('intro-gate').style.display = 'flex';
       }
+    } else {
+      document.getElementById('intro-gate').style.display = 'flex';
+    }
+        
 
       // 2. Tự động sửa lại hành vi của nút "Lấy Key Free !" trong giao diện HTML của bạn
       const freeKeyBtn = document.querySelector('.pro-btn-sub');
@@ -915,9 +927,22 @@ input,select,textarea{font-size:16px}
     // Hàm kích hoạt thời gian sử dụng 24 giờ liên tục
 function activate24hExpiry() {
   showToast("🔑 Kích hoạt thành công!\nGiao diện có hiệu lực trong 24 giờ.");
+  
   const twentyFourHours = 24 * 60 * 60 * 1000;
   const expiryTarget = new Date().getTime() + twentyFourHours;
-  sessionStorage.setItem('panel_expiry_time', expiryTarget.toString());
+  
+  // Kiểm tra trạng thái nút tích chọn
+  const isRemember = document.getElementById('remember-key').checked;
+  
+  if (isRemember) {
+    // Nếu có tích: Lưu vào localStorage (Tắt app vào lại vẫn còn hạn)
+    localStorage.setItem('panel_expiry_time', expiryTarget.toString());
+    localStorage.setItem('panel_remember_state', 'true');
+  } else {
+    // Nếu không tích: Lưu vào sessionStorage (Tắt app, thoát ra là mất ngay)
+    sessionStorage.setItem('panel_expiry_time', expiryTarget.toString());
+    localStorage.removeItem('panel_remember_state');
+  }
 
   setTimeout(() => {
     document.getElementById('intro-gate').style.transition = 'opacity 0.5s ease';
@@ -927,6 +952,7 @@ function activate24hExpiry() {
     }, 500);
   }, 1200);
 }
+  
     
     // --- CÁC HÀM TÍNH NĂNG PANEL GIỮ NGUYÊN THEO FILE GỐC CỦA BẠN ---
     function toggleFeature(type) {
