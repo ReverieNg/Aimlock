@@ -944,28 +944,26 @@ input,select,textarea{font-size:16px}
 
     // Hàm mở ứng dụng game Free Fire dạng URL Scheme truyền thống
     function openFreeFire(type) {
-      if (type === 'normal') {
-        showToast("🚀 Đang áp dụng cấu hình... Đang mở Free Fire Thường!");
-        setTimeout(() => {
-          // Thử gọi bằng URL Scheme gốc của game
-          window.location.href = "freefireth://"; 
-          
-          // Nếu sau 1.5 giây không mở được game (do thiếu app) thì mới sang CH Play
-          setTimeout(() => {
-            window.open("https://play.google.com/store/apps/details?id=com.dts.freefireth", "_blank");
-          }, 1500);
-        }, 1200);
-      } else if (type === 'max') {
-        showToast("🚀 Đang áp dụng cấu hình... Đang mở Free Fire MAX!");
-        setTimeout(() => {
-          window.location.href = "freefiremax://";
-          
-          setTimeout(() => {
-            window.open("https://play.google.com/store/apps/details?id=com.dts.freefiremax", "_blank");
-          }, 1500);
-        }, 1200);
-      }
+  let packageName = "com.dts.freefireth";
+  
+  if (type === 'normal') {
+    showToast("🚀 Đang áp dụng cấu hình... Đang mở Free Fire Thường!");
+  } else if (type === 'max') {
+    packageName = "com.dts.freefiremax";
+  }
+
+  // Mẹo: Tạo một thẻ liên kết ẩn có thuộc tính download/external để ép WebView nhả link ra ngoài
+  setTimeout(() => {
+    const a = document.createElement('a');
+    a.href = "https://play.google.com/store/apps/details?id=" + packageName;
+    a.target = "_blank";
+    a.rel = "noopener noreferrer";
+    document.body.appendChild(a);
+    a.click(); // Giả lập cú click của người dùng
+    document.body.removeChild(a);
+  }, 1200);
     }
+    
 
     function closeAnnounce() { document.getElementById('announce-bar').classList.add('hidden'); }
     function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
